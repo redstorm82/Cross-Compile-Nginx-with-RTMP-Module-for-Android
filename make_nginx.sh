@@ -26,6 +26,7 @@ tar xzf $NGINX_SRC_PKG
 command -v adb >/dev/null 2>&1 || { echo >&2 "This script needs adb, but it's not found. Install it and add its path to `PATH`. Aborting." >/dev/tty; exit 1; }
 cd $NGINX_SRC_DIR
 
+sed -i '/exit 1/d' auto/cc/name
 # modify the auto files and run autotests on Android using adb
 # these commands work well on macOS
 _ADB_PUSH_AUTOTEST='adb push $NGX_AUTOTEST /data/local/tmp 2>\&1 >/dev/null'
@@ -57,6 +58,10 @@ sed -i -e 's@#include <ngx_core.h>@&\
 #include <openssl/des.h>@' $_SRC_OS_UNIX_DIR/ngx_user.c
 sed -i -e 's@value = crypt((char \*) key, (char \*) salt);@value = DES_crypt((char \*) key, (char \*) salt);@' $_SRC_OS_UNIX_DIR/ngx_user.c
 
+#--without-http_rewrite_module \
+#--without-http_proxy_module \
+#--without-http_userid_module \
+
 ./configure \
 --crossbuild=android-arm \
 --prefix=/sdcard/nginx \
@@ -65,8 +70,6 @@ sed -i -e 's@value = crypt((char \*) key, (char \*) salt);@value = DES_crypt((ch
 --without-http_gzip_module \
 --without-pcre \
 --without-http_rewrite_module \
---without-http_proxy_module \
---without-http_userid_module \
 --without-http_upstream_zone_module \
 --without-stream_upstream_zone_module \
 --add-module=$RTMP_MODULE_DIR \
