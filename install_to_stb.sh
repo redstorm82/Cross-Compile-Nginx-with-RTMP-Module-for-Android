@@ -1,5 +1,7 @@
 adb disconnect
+sleep 1
 adb connect $1
+sleep 1
 adb root
 touch sdcard/nginx/logs/fake
 adb push sdcard/nginx /data
