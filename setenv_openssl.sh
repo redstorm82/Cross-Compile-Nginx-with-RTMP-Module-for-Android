@@ -1,0 +1,1 @@
+export OPENSSL_DIR=$PWD/ssl/$ANDROID_API
